@@ -5,12 +5,9 @@ import com.mjc.stage2.Connection;
 
 public class ProxyConnection implements Connection {
     private RealConnection realConnection;
-    private ConnectionPool connectionPool;
     @Override
     public void close() {
-        connectionPool = ConnectionPool.getInstance();
-        this.realConnection = realConnection;
-        connectionPool.getConnection();
+        ConnectionPool.getInstance().releaseConnection(this);
     }
 
     @Override
@@ -20,12 +17,11 @@ public class ProxyConnection implements Connection {
 
     public ProxyConnection(RealConnection realConnection) {
         this.realConnection = realConnection;
-        connectionPool = ConnectionPool.getInstance();
     }
 
     public void reallyClose() {
         // Write your code here!
-        connectionPool.releaseConnection(realConnection);
+        realConnection.close();
     }
     // Implement methods here!
 }
